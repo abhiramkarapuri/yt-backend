@@ -1,0 +1,17 @@
+{
+  "name": "yt-backend",
+  "version": "1.0.0",
+  "description": "a backend -youtube",
+  "keywords": [
+    "javascript",
+    "backend",
+    "chai"
+  ],
+  "license": "ISC",
+  "author": "Abhiram",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
