@@ -14,7 +14,15 @@ import connectDB from "./db/index.js";
 console.log("PORT:", process.env.PORT);
 console.log("MONGODB_URI EXISTS:", !!process.env.MONGODB_URI);
 
-connectDB();
+connectDB()
+.then(()=>{
+  app.listen(process.env.PORT || 8000, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });
+})
+.catch((err)=>{
+  console.log("Error connecting to MongoDB:", err);
+})
 
 
 // import express from "express";
