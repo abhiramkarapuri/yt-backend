@@ -1,7 +1,7 @@
 import {asyncHandler} from '../utils/asyncHandler.js';
 import {ApiError} from '../utils/ApiError.js';
 import {User} from '../models/user.model.js';
-import {uploadToCloudinary} from '../utils/cloudinary.js';
+import {uploadOnCloudinary} from '../utils/cloudinary.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // return res
 
   const {fullName, email, username, password} = req.body
-  console.log("User details:", {fullName, email, username, password});
+  //console.log("User details:", {fullName, email, username, password});
 
   if(
     [fullName, email, username, password].some((field) => !field ||field?.trim() === "")
@@ -24,23 +24,31 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required and must not be empty")
   }
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username },{ email }]
   })
 
   if(existedUser){
     throw new ApiError(409, "User with the same email or username already exists")
   }
+  // console.log("BODY:", req.body);
+  // console.log("FILES:", req.files);
+
 
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
+
+  let coverImageLocalPath;
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+    coverImageLocalPath = req.files.coverImage[0].path
+  }
 
   if(!avatarLocalPath){
     throw new ApiError(400, "Avatar file is required")
   }
   
-  const avatar =await uploadToCloudinary(avatarLocalPath)
-  const coverImage = await uploadToCloudinary(coverImageLocalPath) 
+  const avatar =await uploadOnCloudinary(avatarLocalPath)
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath) 
 
   if(!avatar){
     throw new ApiError(400, "Avatar file required")
@@ -61,7 +69,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user")
   }
 
-  return res.status(201).json(new ApiResponse(200, createdUser, "User registered successfully"))
+  return res.status(201).json(new ApiResponse(201, createdUser, "User registered successfully"))
 
   // if (fullName == ""){
   //   throw new ApiError(400, "Full name is required")

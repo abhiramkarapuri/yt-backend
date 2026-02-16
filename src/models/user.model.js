@@ -51,10 +51,10 @@ const userSchema = new Schema(
   }
 )
 
-userSchema.pre("save", async function (next){
+userSchema.pre("save", async function (){
   if(!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password,10)
-  next() // no need next() here but it's a good practice to call it to avoid any issues in the future if we add more pre save hooks
+  //next(); // no need next() here but it's a good practice to call it to avoid any issues in the future if we add more pre save hooks
 })
 
 userSchema.methods.isPasswordCorrect = async function (password){

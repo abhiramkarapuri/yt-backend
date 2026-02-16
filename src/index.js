@@ -1,15 +1,18 @@
 //require("dotenv").config({path:'./env'});
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({
+  path:'./.env'
+});
+console.log("INDEX ENV TEST:", process.env.CLOUDINARY_API_KEY);
+
+// dotenv.config();
 // import mongoose from "mongoose";
 // import { DB_NAME } from "./constants.js";
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
 //console.log(process.env.MONGO_URI);
 
-// dotenv.config({
-//   path:'.env'
-// });
+
 
 console.log("PORT:", process.env.PORT);
 console.log("MONGODB_URI EXISTS:", !!process.env.MONGODB_URI);
