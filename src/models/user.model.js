@@ -52,7 +52,7 @@ const userSchema = new Schema(
 )
 
 userSchema.pre("save", async function (){
-  if(!this.isModified("password")) return next();
+  if(!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password,10)
   //next(); // no need next() here but it's a good practice to call it to avoid any issues in the future if we add more pre save hooks
 })
